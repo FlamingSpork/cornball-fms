@@ -3,7 +3,7 @@ LIBS=-lcppcms -lbooster
 
 all: fms
 
-fms: hello-dispatcher.cpp
+fms: main.cpp
 	$(CXX) -O2 -Wall -g main.cpp Admin.cpp -o fms.out -std=c++0x ${LIBS} -fpermissive
 
 clean:

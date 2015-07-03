@@ -32,7 +32,7 @@ Admin::~Admin() {
 void Admin::initFMS()
 {
     std::cout <<
-    "Welcome to Tanx FMS!\n"
+    "Welcome to Cornball FMS!\n"
     "WARNING: This is not officially supported by the Foundation for\n"
     "Inspiration and Recognition of Science and Technology.\n"
     "Any use of FIRST(R) branding is merely a suggested use and does\n"
@@ -130,8 +130,8 @@ void Admin::parseEventFile(std::string filename)
 	std::ifstream filein(filename);
 	std::string fileBufferS;
 	char * fileBufferC, * charBuffer;
-	bool istItOpen;
-	istItOpen = filein.is_open();
+	//bool istItOpen; //File I/O debug
+	//istItOpen = filein.is_open();
 
 	//fileAll = filein.rdbuf();
 	//fileBufferS = "";
@@ -144,7 +144,7 @@ void Admin::parseEventFile(std::string filename)
 	strcpy(eName, charBuffer);
 	//std::cout<<eName<<"\n";
 
-	istItOpen = filein.is_open();
+	//istItOpen = filein.is_open();
 
 	std::getline(filein, fileBufferS);
 	fileBufferC = fileBufferS.c_str();

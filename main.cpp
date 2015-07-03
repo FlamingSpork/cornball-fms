@@ -11,7 +11,6 @@
 #include <iostream>
 #include <stdlib.h>
 #include <fstream>
-#include <thread>
 #include <string.h>
 #include <stdlib.h>
 #include "Admin.h"
@@ -21,14 +20,6 @@ public:
     my_hello_world(cppcms::service &srv) :
         cppcms::application(srv)
     {
-        dispatcher().assign("/smile",&my_hello_world::smile,this);
-        mapper().assign("smile","/smile");
-        
-        dispatcher().assign("/number/(\\d+)",&my_hello_world::number,this,1);
-        mapper().assign("number","/number/{1}");
-
-        dispatcher().assign("/increment",&my_hello_world::increment,this);
-        mapper().assign("increment","/increment");
 
         dispatcher().assign("/jquery.min.js",&my_hello_world::jQuery,this);
         mapper().assign("jquery.min.js","/jquery.min.js");
@@ -73,9 +64,6 @@ public:
         dispatcher().assign("/score/buttons.js",&my_hello_world::buttonsjs,this);
         mapper().assign("buttons.js","/score/buttons.js");
 
-        dispatcher().assign("/sporks",&my_hello_world::sporks,this);
-        mapper().assign("sporks","/sporks");
-
         dispatcher().assign("",&my_hello_world::root,this);
         mapper().assign("");
 
@@ -114,11 +102,7 @@ public:
     }
     //virtual void main(std::string url);
 
-    void smile();
-    void sporks();
     void root();
-    void number(std::string num);
-    void increment();
     void jQuery();
 
     void blueInc();
@@ -163,16 +147,6 @@ private:
     int greenCounter;
 };
 
-//void my_hello_world::main(std::string /*url*/)
-/*{
-    response().out()<<
-        "<html>\n"
-        "<body>\n"
-        "  <h1>Hello World</h1>\n"
-        "Hello Papa!\n"
-        "</body>\n"sporks
-        "</html>\n";
-}*/
 Admin instance;
 void runFMS()
 {
@@ -196,54 +170,16 @@ int main(int argc,char ** argv)
     std::cout<<"Exiting now..."<< std::endl;
 }
 
-void my_hello_world::smile()
-{
-    response().out()<< 
-    "<html>\n"
-    "<body>\n"
-    "<h1>:)!</h1>\n"
-    "<p> Love, Philo\n"
-    "</body>\n"
-    "</html>\n";
-}
-
-void my_hello_world::sporks()
-{
-    response().out()<<
-    "<html>\n"
-    "<body>\n"
-    "<center><h1>Sporks!</h1></center>\n"
-    "<p>A spork.\n"
-    "<p><img src=\"http://quibbler.host22.com/spork/NYCapitol.jpg\">\n"
-    "</body>\n"
-    "</html>\n";
-
-}
 
 void my_hello_world::root()
 {
     response().out()<<
     "<html>\n"
     "<body>\n"
-    "<h1>Philo's Web Server</h1>\n"
-    "<p><a href=\"/sporks\">Sporks!</a>\n"
-    "<p><a href=\"/smile\">Smile!</a>\n"
     "</body>\n"
     "</html>\n";
 }
 
-void my_hello_world::number(std::string num)
-{
-int no = atoi(num.c_str());  
-    response().out() << "The number is " << no << "<br/>\n";  
-    response().out() << "<a href='" << url("/") << "'>Go back</a>"; 
-}
-
-void my_hello_world::increment()
-{
-    counter++;
-    response().out() << "The counter is now " << counter << ".\n";
-}
 
 void my_hello_world::redInc()
 {
@@ -314,27 +250,6 @@ void my_hello_world::greenDec()
 }
 void my_hello_world::buttons()
 {
-   /* response().out() <<
-    "<html>\n"
-    "<body>\n"
-    "<script src=\"http://themagicalnecromancerinvasion.com/spork/jquery.min.js\">\n"
-    "<script>\n"
-    "var red = function() {\n"
-    //"jQuery.get( \"score/red\", function( datar ) {\n"
-    "alert( datar + \" points.\");\n"
-    "});\n"
-    "}\n"
-    "var blue = function() {\n"
-    "jQuery.get( \"score/blue\", function( datab ) {\n"
-    "alert( datab + \" points.\");\n"
-    "});\n"
-    "}\n"
-    "</script>\n"
-    "<a onclick=\"alert('Tort!');\" href=\"javascript:void(0)\"><img src=\"http://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Button_Icon_Red.svg/200px-Button_Icon_Red.svg.png\"></a>\n"
-    "<a onclick=\"window.blue();\" href=\"javascript:void(0)\"><img src=\"http://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Button_Icon_Blue.svg/200px-Button_Icon_Blue.svg.png\"></a>\n"
-    "</body>\n"
-    "</html>\n"; */
-    
     std::ifstream file ("buttons.html");
     response().out() << file.rdbuf();
 }
@@ -381,7 +296,7 @@ void my_hello_world::teamlist()
     "</style>\n"
     "<body>\n"
     "<script src=\"pdfGen.js\"></script>\n"
-    "<script src=\"http://themagicalnecromancerinvasion.com/spork/jquery.min.js\"></script>\n"
+    "<script src=\"/jquery.min.js\"></script>\n"
     "<p><a href=\"#\" onclick=\"return xepOnline.Formatter.Format('list');\">PDF/Printable Version</a>"
     "<div id=\"list\">\n"
     "<table style=\"border: 1px solid black;\">\n"
@@ -435,7 +350,7 @@ void my_hello_world::printSchedule()
 	    "</style>\n"
 	    "<body>\n"
 	    "<script src=\"pdfGen.js\"></script>\n"
-	    "<script src=\"http://themagicalnecromancerinvasion.com/spork/jquery.min.js\"></script>\n"
+	    "<script src=\"/jquery.min.js\"></script>\n"
 	    "<p><a href=\"#\" onclick=\"return xepOnline.Formatter.Format('list');\">PDF/Printable Version</a>"
 	    "<div id=\"list\">\n"
 	    "<table style=\"border: 1px solid black;\">\n"
@@ -513,7 +428,7 @@ void my_hello_world::printHighlightedSchedule(std::string num)
 	    "</style>\n"
 	    "<body>\n"
 	    "<script src=\"/admin/pdfGen.js\"></script>\n"
-	    "<script src=\"http://themagicalnecromancerinvasion.com/spork/jquery.min.js\"></script>\n"
+	    "<script src=\"/jquery.min.js\"></script>\n"
 	    "<p><a href=\"#\" onclick=\"return xepOnline.Formatter.Format('list');\">PDF/Printable Version</a>"
 	    "<div id=\"list\">\n"
 	    "<table style=\"border: 1px solid black;\">\n"
@@ -699,6 +614,7 @@ void my_hello_world::matchScoring()
 	catch (std::exception const &e)
 	{
 		std::cerr<<e.what();
+		std::cerr<<"I didn't realize that this would throw.....";
 	}
 
 	if (display)
@@ -781,8 +697,7 @@ void my_hello_world::dispFinalScores()
 				"</td>\n"
 				"</tr>\n"
 				"</table>\n";
-		//Make it output team numbers and scores
-		//Match index - 1
+				//Match index - 1
 	}
 }
 // vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
