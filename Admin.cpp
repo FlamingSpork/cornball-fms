@@ -66,14 +66,14 @@ void Admin::teamlistFetchData()
     //Determine number of teams
     int teamNumber;
     std::string fileBufferS;
-    char command[300], teamNumberC[5];
+    char command[300], teamNumberC[15];
     bool istItOpen;
     int i; //counter
     for ( i=0; i < numTeams; i++)
     {
         //i is also the index for the teams list
     	teamNumber = teamArray[i].TeamNumber;
-        std::sprintf (command, "curl -o %d --header 'X-TBA-App-Id: frc3003:cornball-fms:v0.01' http://www.thebluealliance.com/api/v2/team/frc%d", teamNumber, teamNumber);
+        std::sprintf (command, "curl -o %d.team --header 'X-TBA-App-Id: frc3003:cornball-fms:v0.01' http://www.thebluealliance.com/api/v2/team/frc%d", teamNumber, teamNumber);
     	//command = "curl -o test www.google.com";
         system(command);
 
@@ -83,7 +83,7 @@ void Admin::teamlistFetchData()
 
     for (i=0; i < numTeams; i++)
     {
-    	std::sprintf (teamNumberC, "%d", teamArray[i].TeamNumber);
+    	std::sprintf (teamNumberC, "%d.team", teamArray[i].TeamNumber);
     	filein.open(teamNumberC);
     	istItOpen = filein.is_open();
 
@@ -271,7 +271,11 @@ int Admin::getCurrentTimer()
 			isMatchOngoing = 0;
 			return 0;
 		}
-		else
+		if (diff == 120)
+		{
+			currentSound = "m-end";
+		}
+		if (!(diff > 120))
 		{
 		return 120 - diff;
 		}

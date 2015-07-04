@@ -15,89 +15,101 @@
 #include <stdlib.h>
 #include "Admin.h"
 
-class my_hello_world : public cppcms::application {
+class fms : public cppcms::application {
 public:
-    my_hello_world(cppcms::service &srv) :
+    fms(cppcms::service &srv) :
         cppcms::application(srv)
     {
 
-        dispatcher().assign("/jquery.min.js",&my_hello_world::jQuery,this);
+        dispatcher().assign("/jquery.min.js",&fms::jQuery,this);
         mapper().assign("jquery.min.js","/jquery.min.js");
 
         //Blue Scoring code
-        dispatcher().assign("/score/blue/inc",&my_hello_world::blueInc,this);
+        dispatcher().assign("/score/blue/inc",&fms::blueInc,this);
         mapper().assign("blueinc","/score/blue/inc");
-        dispatcher().assign("/score/blue/get",&my_hello_world::blueGet,this);
+        dispatcher().assign("/score/blue/get",&fms::blueGet,this);
         mapper().assign("blueget","/score/blue/get");
-        dispatcher().assign("/score/blue/dec",&my_hello_world::blueDec,this);
+        dispatcher().assign("/score/blue/dec",&fms::blueDec,this);
         mapper().assign("bluedec","/score/blue/dec");
 
         //Red Scoring code
-        dispatcher().assign("/score/red/inc",&my_hello_world::redInc,this);
+        dispatcher().assign("/score/red/inc",&fms::redInc,this);
         mapper().assign("redinc","/score/red/inc");
-        dispatcher().assign("/score/red/get",&my_hello_world::redGet,this);
+        dispatcher().assign("/score/red/get",&fms::redGet,this);
         mapper().assign("redget","/score/red/get");
-        dispatcher().assign("/score/red/dec",&my_hello_world::redDec,this);
+        dispatcher().assign("/score/red/dec",&fms::redDec,this);
         mapper().assign("reddec","/score/red/dec");
 
         //Yellow Scoring Code
-        dispatcher().assign("/score/yellow/inc",&my_hello_world::yellowInc,this);
+        dispatcher().assign("/score/yellow/inc",&fms::yellowInc,this);
         mapper().assign("yellowinc","/score/yellow/inc");
-        dispatcher().assign("/score/yellow/get",&my_hello_world::yellowGet,this);
+        dispatcher().assign("/score/yellow/get",&fms::yellowGet,this);
         mapper().assign("yellowget","/score/yellow/get");
-        dispatcher().assign("/score/yellow/dec",&my_hello_world::yellowDec,this);
+        dispatcher().assign("/score/yellow/dec",&fms::yellowDec,this);
         mapper().assign("yellowdec","/score/yellow/dec");
 
         //Green Scoring Code
-        dispatcher().assign("/score/green/inc",&my_hello_world::greenInc,this);
+        dispatcher().assign("/score/green/inc",&fms::greenInc,this);
         mapper().assign("greeninc","/score/green/inc");
-        dispatcher().assign("/score/green/get",&my_hello_world::greenGet,this);
+        dispatcher().assign("/score/green/get",&fms::greenGet,this);
         mapper().assign("greenget","/score/green/get");
-        dispatcher().assign("/score/green/dec",&my_hello_world::greenDec,this);
+        dispatcher().assign("/score/green/dec",&fms::greenDec,this);
         mapper().assign("greendec","/score/green/dec");
 
 
 
-        dispatcher().assign("/score/buttons.html",&my_hello_world::buttons,this);
+        dispatcher().assign("/score/buttons.html",&fms::buttons,this);
         mapper().assign("buttons.html","/score/buttons.html");
 
-        dispatcher().assign("/score/buttons.js",&my_hello_world::buttonsjs,this);
+        dispatcher().assign("/score/buttons.js",&fms::buttonsjs,this);
         mapper().assign("buttons.js","/score/buttons.js");
 
-        dispatcher().assign("",&my_hello_world::root,this);
+        dispatcher().assign("",&fms::root,this);
         mapper().assign("");
 
         mapper().root("/server");
 
-        dispatcher().assign("/audience/logo.png",&my_hello_world::logopng,this);
+        dispatcher().assign("/audience/logo.png",&fms::logopng,this);
         mapper().assign("logo.png","/audience/logo.png");
-        dispatcher().assign("/audience/audience.html",&my_hello_world::audiencehtml,this);
+        dispatcher().assign("/audience/audience.html",&fms::audiencehtml,this);
         mapper().assign("audience.html","/audience/audience.html");
-        dispatcher().assign("/audience/audience.js",&my_hello_world::audiencejs,this);
+        dispatcher().assign("/audience/audience.js",&fms::audiencejs,this);
         mapper().assign("audience.js","/audience/audience.js");
-        dispatcher().assign("/audience/timer",&my_hello_world::getTimer,this);
+        dispatcher().assign("/audience/timer",&fms::getTimer,this);
         mapper().assign("timer","/audience/timer");
+        dispatcher().assign("/audience/sound.html",&fms::soundhtml,this);
+        mapper().assign("sound.html","/audience/sound.html");
+        dispatcher().assign("/audience/sound.js",&fms::soundjs,this);
+        mapper().assign("sound.js","/audience/sound.js");
+        dispatcher().assign("/audience/current-sound",&fms::currentSound,this);
+        mapper().assign("current-sound","/audience/current-sound");
 
-        dispatcher().assign("/admin/teamlist.html",&my_hello_world::teamlist,this);
+        dispatcher().assign("/admin/teamlist.html",&fms::teamlist,this);
         mapper().assign("teamlist.html", "/admin/teamlist.html");
-        dispatcher().assign("/admin/pdfGen.js",&my_hello_world::pdfGen,this);
+        dispatcher().assign("/admin/pdfGen.js",&fms::pdfGen,this);
         mapper().assign("pdfGen.js", "/admin/pdfGen.js");
-        dispatcher().assign("/admin/schedule.html",&my_hello_world::printSchedule,this);
+        dispatcher().assign("/admin/schedule.html",&fms::printSchedule,this);
         mapper().assign("schedule.html", "/admin/schedule.html");
-        dispatcher().assign("/admin/schedule/(\\d+)",&my_hello_world::printHighlightedSchedule,this,1);
+        dispatcher().assign("/admin/schedule/(\\d+)",&fms::printHighlightedSchedule,this,1);
         mapper().assign("schedule","/admin/schedule/{1}");
+        dispatcher().assign("/admin/control-center.html",&fms::controlCenter,this);
+        mapper().assign("control-center.html","/admin/control-center.html");
+        dispatcher().assign("/admin/control-center.js",&fms::controlCenterjs,this);
+        mapper().assign("control-center.js","/admin/control-center.js");
 
-        dispatcher().assign("/match/start",&my_hello_world::startMatchTimer,this);
+        dispatcher().assign("/match/start",&fms::startMatchTimer,this);
         mapper().assign("matchstart","/match/start");
-        dispatcher().assign("/match/scoring.html",&my_hello_world::matchScoring,this);
+        dispatcher().assign("/match/scoring.html",&fms::matchScoring,this);
         mapper().assign("matchscoring","/match/scoring.html");
-        dispatcher().assign("/match/final-scores",&my_hello_world::dispFinalScores,this);
+        dispatcher().assign("/match/final-scores",&fms::dispFinalScores,this);
         mapper().assign("final-scores","/match/final-scores");
+        dispatcher().assign("/match/stop",&fms::stopMatchTimer,this);
+        mapper().assign("matchstop","/match/stop");
 
-        my_hello_world::redCounter = 0;
-        my_hello_world::blueCounter = 0;
-        my_hello_world::yellowCounter = 0;
-        my_hello_world::greenCounter = 0;
+        fms::redCounter = 0;
+        fms::blueCounter = 0;
+        fms::yellowCounter = 0;
+        fms::greenCounter = 0;
 
     }
     //virtual void main(std::string url);
@@ -128,19 +140,24 @@ public:
     void audiencehtml();
     void audiencejs();
     void getTimer();
+    void soundhtml();
+    void soundjs();
+    void currentSound();
 
     void teamlist();
     void pdfGen();
     void printSchedule();
     void printHighlightedSchedule(std::string num);
+    void controlCenter();
+    void controlCenterjs();
 
     void startMatchTimer();
     void matchScoring();
     void dispFinalScores();
+    void stopMatchTimer();
 
 
 private:
-    int counter;
     int redCounter;
     int blueCounter;
     int yellowCounter;
@@ -161,7 +178,7 @@ int main(int argc,char ** argv)
         //Initial functions
         //my_hello_world::initFMS();
         cppcms::service srv(argc,argv);
-        srv.applications_pool().mount(cppcms::applications_factory<my_hello_world>());
+        srv.applications_pool().mount(cppcms::applications_factory<fms>());
         srv.run();
     }
     catch(std::exception const &e) {
@@ -171,7 +188,7 @@ int main(int argc,char ** argv)
 }
 
 
-void my_hello_world::root()
+void fms::root()
 {
     response().out()<<
     "<html>\n"
@@ -181,105 +198,105 @@ void my_hello_world::root()
 }
 
 
-void my_hello_world::redInc()
+void fms::redInc()
 {
     redCounter++;
     response().out() << redCounter;
 }
 
-void my_hello_world::redGet()
+void fms::redGet()
 {
     response().out() << redCounter;
 }
 
-void my_hello_world::redDec()
+void fms::redDec()
 {
     redCounter--;
     response().out() << redCounter;
 }
 
-void my_hello_world::blueInc()
+void fms::blueInc()
 {
     blueCounter++;
     response().out() << blueCounter;
 }
 
-void my_hello_world::blueGet()
+void fms::blueGet()
 {
     response().out() << blueCounter;
 }
 
-void my_hello_world::blueDec()
+void fms::blueDec()
 {
     blueCounter--;
     response().out() << blueCounter;
 }
 
-void my_hello_world::yellowInc()
+void fms::yellowInc()
 {
     yellowCounter++;
     response().out() << yellowCounter;
 }
 
-void my_hello_world::yellowGet()
+void fms::yellowGet()
 {
     response().out() << yellowCounter;
 }
 
-void my_hello_world::yellowDec()
+void fms::yellowDec()
 {
     yellowCounter--;
     response().out() << yellowCounter;
 }
 
-void my_hello_world::greenInc()
+void fms::greenInc()
 {
     greenCounter++;
     response().out() << greenCounter;
 }
 
-void my_hello_world::greenGet()
+void fms::greenGet()
 {
     response().out() << greenCounter;
 }
 
-void my_hello_world::greenDec()
+void fms::greenDec()
 {
     greenCounter--;
     response().out() << greenCounter;
 }
-void my_hello_world::buttons()
+void fms::buttons()
 {
     std::ifstream file ("buttons.html");
     response().out() << file.rdbuf();
 }
 
-void my_hello_world::buttonsjs()
+void fms::buttonsjs()
 {
     std::ifstream file ("buttons.js");
     response().out() << file.rdbuf();
 }
 
-void my_hello_world::logopng()
+void fms::logopng()
 {
     std::ifstream file ("MaizeLogo.png");
     response().content_type("image/png");
     response().out() << file.rdbuf();
 }
 
-void my_hello_world::audiencehtml()
+void fms::audiencehtml()
 {
     std::ifstream file ("audience.html");
     response().out() << file.rdbuf();
 }
 
-void my_hello_world::audiencejs()
+void fms::audiencejs()
 {
     std::ifstream file ("audience.js");
     response().out() << file.rdbuf();
 }
 
-void my_hello_world::teamlist()
+void fms::teamlist()
 {
     //Use the array filled from teamlistFetchData()
     int l_numTeams, i;
@@ -332,13 +349,13 @@ void my_hello_world::teamlist()
     }
 }
 
-void my_hello_world::pdfGen()
+void fms::pdfGen()
 {
 	std::ifstream filein("pdfGen.js");
 	response().out() << filein.rdbuf();
 }
 
-void my_hello_world::printSchedule()
+void fms::printSchedule()
 {
 	int l_numMatches, i;
 	l_numMatches = instance.numPractice + instance.numElim + instance.numQual + instance.numFinal;
@@ -415,7 +432,7 @@ void my_hello_world::printSchedule()
 		}
 }
 
-void my_hello_world::printHighlightedSchedule(std::string num)
+void fms::printHighlightedSchedule(std::string num)
 {
 	int l_numMatches, i, htNumber;
 	htNumber = atoi(num.c_str());
@@ -537,13 +554,13 @@ void my_hello_world::printHighlightedSchedule(std::string num)
 	}
 }
 
-void my_hello_world::jQuery()
+void fms::jQuery()
 {
 	std::ifstream filein("jquery.min.js");
 	response().out() << filein.rdbuf();
 }
 
-void my_hello_world::getTimer()
+void fms::getTimer()
 {
 	int minutes, seconds, totalTime;
 	totalTime = instance.getCurrentTimer();
@@ -563,13 +580,14 @@ void my_hello_world::getTimer()
 	}
 }
 
-void my_hello_world::startMatchTimer()
+void fms::startMatchTimer()
 {
 	if (!instance.isTimerRunning)
 	{
 	instance.startTimer();
 	instance.isMatchOngoing = 1;
 	response().out() << "Timer Started.";
+	instance.currentSound = "m-start";
 	}
 	else
 	{
@@ -577,7 +595,17 @@ void my_hello_world::startMatchTimer()
 	}
 }
 
-void my_hello_world::matchScoring()
+void fms::stopMatchTimer()
+{
+	if (instance.isTimerRunning)
+	{
+		instance.isTimerRunning = 0;
+		//instance.isMatchOngoing = 0;
+		instance.currentSound = "m-abort"; //This is a match abortion.
+	}
+}
+
+void fms::matchScoring()
 {
 	std::string red, blue, yellow, green;
 	bool display = 1;
@@ -648,7 +676,7 @@ void my_hello_world::matchScoring()
 
 }
 
-void my_hello_world::dispFinalScores()
+void fms::dispFinalScores()
 {
 	if(!instance.isMatchOngoing)
 	{
@@ -698,6 +726,51 @@ void my_hello_world::dispFinalScores()
 				"</tr>\n"
 				"</table>\n";
 				//Match index - 1
+	}
+}
+
+void fms::controlCenter()
+{
+	std::ifstream filein("control-center.html");
+	response().out() << filein.rdbuf();
+}
+
+void fms::controlCenterjs()
+{
+	std::ifstream filein("control-center.js");
+	response().out() << filein.rdbuf();
+}
+
+void fms::soundhtml()
+{
+	std::ifstream filein("sound.html");
+	response().out() << filein.rdbuf();
+}
+
+void fms::soundjs()
+{
+	std::ifstream filein("sound.js");
+	response().out() << filein.rdbuf();
+}
+
+void fms::currentSound()
+{
+	if(instance.currentSound == "m-start")
+	{
+		response().out() << "start";
+		instance.currentSound = "";
+	}
+
+	if(instance.currentSound == "m-end")
+	{
+		response().out() << "end";
+		instance.currentSound = "";
+	}
+
+	if(instance.currentSound == "m-abort")
+	{
+		response().out() << "abort";
+		instance.currentSound = "";
 	}
 }
 // vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4

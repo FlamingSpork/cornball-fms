@@ -26,3 +26,12 @@
 *.exe
 *.out
 *.app
+
+# Some special cases
+/libcppcms.so.1
+/Debug.txt
+/Maize.event
+/Makefile~
+/test
+
+*.team

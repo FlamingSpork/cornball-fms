@@ -5,6 +5,8 @@
  *      Author: FlamingSpork
  *
  *      Let's see how many include lines we need.....
+ *
+ *      A class for administration and related tasks.
  */
 #include <iostream>
 #include <stdlib.h>
@@ -59,6 +61,8 @@ public:
     bool isTimerRunning;
 
     bool isMatchOngoing;
+
+    std::string currentSound;
 
 };
 
