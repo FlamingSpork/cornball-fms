@@ -38,6 +38,9 @@ public:
     int getCurrentTimer();
     void startTimer();
 
+    void postMatchCleanup();
+    void sortTeams();
+
     enum MatchType {practice_match, qual_match, elim_match, final_match};
     enum TeamColour {red_team = 0, blue_team = 1, yellow_team = 2, green_team = 3};
     struct MatchInfo {
@@ -50,6 +53,7 @@ public:
         std::string fullName;
         std::string location;
         std::string nickname;
+        int rank, matchesWon, sumScores, numMatches, average;
     };
     TeamInfo * teamArray; //Will be initialized in code
     MatchInfo * matchArray;

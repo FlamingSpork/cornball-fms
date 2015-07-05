@@ -93,33 +93,14 @@ void Admin::teamlistFetchData()
     	boost::property_tree::ptree pTree;
     	boost::property_tree::read_json(sStream, pTree);
 
-    	//Will this even work?
     	teamArray[i].fullName = pTree.get<std::string>("name");
     	teamArray[i].location = pTree.get<std::string>("location");
     	teamArray[i].nickname = pTree.get<std::string>("nickname");
-        /*std::getline(filein, fileBufferS); //The entire file
-        fileBufferC = fileBufferS.c_str();
-        charBuffer = strtok(fileBufferC, ","); //"website"
-        charBuffer = strtok(NULL, ","); //"name"
-        teamArray[i].fullName = charBuffer;
-        charBuffer = strtok(NULL, ","); //"locality"
-        charBuffer = strtok(NULL, ","); //"rookie_year"
-        charBuffer = strtok(NULL, ","); //"region"
-        charBuffer = strtok(NULL, ","); //"team_number"
-        charBuffer = strtok(NULL, ","); //"location"
-        strcpy(charBuffer1, charBuffer); // Let the madness begin...
-        charBuffer = strtok(NULL, ",");
-        strcpy(charBuffer2, charBuffer);
-        charBuffer = strtok(NULL, ",");
-        strcpy(charBuffer3, charBuffer);
-        std::sprintf(charBuffer, "%s,%s,%s", charBuffer1, charBuffer2, charBuffer3);
-        teamArray[i].location = charBuffer;
-        charBuffer4 = strtok(NULL, ","); //"key"
-        charBuffer4 = strtok(NULL, ","); //Let's see...
-        charBuffer4 = strtok(NULL, ",");
-        charBuffer4 = strtok(NULL, ","); //"country_name"
-        charBuffer = strtok(NULL, ","); //"nickname"
-        teamArray[i].nickname = charBuffer;*/
+
+    	teamArray[i].matchesWon = 0;
+    	teamArray[i].sumScores = 0;
+    	teamArray[i].numMatches = 0;
+    	teamArray[i].rank = i;
 
         filein.close();
     }
@@ -265,19 +246,21 @@ int Admin::getCurrentTimer()
 	diff = (int)time(NULL) - (int)startTime;
 	if(isTimerRunning)
 	{
-		if (diff > 120)
-		{
-			isTimerRunning = 0;
-			isMatchOngoing = 0;
-			return 0;
-		}
 		if (diff == 120)
 		{
 			currentSound = "m-end";
+			isTimerRunning = 0;
+			//isMatchOngoing = 0;
+			return 0;
 		}
 		if (!(diff > 120))
 		{
 		return 120 - diff;
+		}
+
+		if(diff > 120)
+		{
+			return 0;
 		}
 	}
 	else
@@ -291,4 +274,88 @@ void Admin::startTimer()
 {
 	startTime = time(NULL);
 	isTimerRunning = 1;
+}
+
+void Admin::postMatchCleanup()
+{
+	//This is executed after the scores are submitted.
+	int i, j;
+
+	for (i=0; i < numTeams; i++)
+	{
+		for (j=0; j < 4; j++)
+		{
+		if (teamArray[i].TeamNumber == matchArray[matchIndex - 1].TeamNumber[j])
+		{
+			teamArray[i].sumScores += matchArray[matchIndex - 1].score[j];
+			teamArray[i].numMatches++;
+			teamArray[i].average = (teamArray[i].sumScores / teamArray[i].numMatches);
+
+			if (j == 0)
+			{
+			if ((matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[3]))
+			{
+				//This code is executed if the team won the match
+				teamArray[i].matchesWon++;
+			}
+			}
+
+			if (j == 1)
+			{
+			if ((matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[0]) && (matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[3]))
+			{
+				//This code is executed if the team won the match
+				teamArray[i].matchesWon++;
+			}
+			}
+
+			if (j == 2)
+			{
+			if ((matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[0]) && (matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[3]))
+			{
+				//This code is executed if the team won the match
+				teamArray[i].matchesWon++;
+			}
+			}
+
+			if (j == 3)
+			{
+			if ((matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[0]))
+			{
+				//This code is executed if the team won the match
+				teamArray[i].matchesWon++;
+			}
+			}
+		}
+
+
+		}
+	}
+
+	sortTeams();
+}
+
+void Admin::sortTeams()
+{
+	int i, j, flag = 1;
+	TeamInfo temp;
+	for (i=1; (i <= numTeams) && flag; i++)
+	{
+		flag = 0;
+
+		for (j=0; j < (numTeams - 1); j++)
+		{
+			if (teamArray[j + 1].matchesWon > teamArray[j].matchesWon)
+			{
+				temp = teamArray[j];
+				teamArray[j] = teamArray[j+1];
+				teamArray[j+1] = temp;
+				teamArray[j].rank = j+1;
+				teamArray[j+1].rank = j+2;
+				flag = 1;
+			}
+		}
+	}
+
+
 }

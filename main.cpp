@@ -83,6 +83,8 @@ public:
         mapper().assign("sound.js","/audience/sound.js");
         dispatcher().assign("/audience/current-sound",&fms::currentSound,this);
         mapper().assign("current-sound","/audience/current-sound");
+        dispatcher().assign("/audience/leaderboard",&fms::leaderboard,this);
+        mapper().assign("leaderboard","/audience/leaderboard");
 
         dispatcher().assign("/admin/teamlist.html",&fms::teamlist,this);
         mapper().assign("teamlist.html", "/admin/teamlist.html");
@@ -143,6 +145,7 @@ public:
     void soundhtml();
     void soundjs();
     void currentSound();
+    void leaderboard();
 
     void teamlist();
     void pdfGen();
@@ -632,6 +635,7 @@ void fms::matchScoring()
 
 			instance.matchIndex++; //Increment the match index
 			instance.isMatchOngoing = 0;
+			instance.postMatchCleanup();
 
 			//response().set_header("Location", "/score/buttons.html");
 			response().out() <<
@@ -772,5 +776,40 @@ void fms::currentSound()
 		response().out() << "abort";
 		instance.currentSound = "";
 	}
+}
+
+void fms::leaderboard()
+{
+	int j;
+	//bool flag;
+
+	instance.sortTeams();
+
+	response().out() <<
+			"<table>\n"
+			"<tr>\n"
+			"<th>Rank</th>\n"
+			"<th>Number</th>\n"
+			"<th>Average Score</th>\n"
+			"</tr>\n";
+
+	//Find each rank and then output it
+		for (j = 0; j < instance.numTeams; j++)
+		{
+			//if (instance.teamArray[j].rank == i)
+			//{
+				response().out() <<
+						"<tr>\n"
+						"<td>"
+						<< instance.teamArray[j].rank <<
+						"</td>\n"
+						"<td>"
+						<< instance.teamArray[j].TeamNumber <<
+						"</td>\n"
+						"<td>"
+						<< instance.teamArray[j].average <<
+						"</td>\n"
+						"</tr>\n";
+		}
 }
 // vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
