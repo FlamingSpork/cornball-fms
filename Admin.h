@@ -67,6 +67,7 @@ public:
     bool isMatchOngoing;
 
     std::string currentSound;
+    std::string currentCenter;
 
 };
 

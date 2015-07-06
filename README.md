@@ -9,4 +9,4 @@ Cornball requires the following pieces:
 * curl >= 7.22.0
 
 You will probably have to build cppcms and booster.
-To build cornball, navigate to the source directory and execute make fms.
+To build cornball, navigate to the source directory and execute 'make fms'.

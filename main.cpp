@@ -85,6 +85,8 @@ public:
         mapper().assign("current-sound","/audience/current-sound");
         dispatcher().assign("/audience/leaderboard",&fms::leaderboard,this);
         mapper().assign("leaderboard","/audience/leaderboard");
+        dispatcher().assign("/audience/center-display",&fms::audienceCenter,this);
+        mapper().assign("center-display","/audience/center-display");
 
         dispatcher().assign("/admin/teamlist.html",&fms::teamlist,this);
         mapper().assign("teamlist.html", "/admin/teamlist.html");
@@ -146,6 +148,7 @@ public:
     void soundjs();
     void currentSound();
     void leaderboard();
+    void audienceCenter();
 
     void teamlist();
     void pdfGen();
@@ -640,7 +643,7 @@ void fms::matchScoring()
 			//response().set_header("Location", "/score/buttons.html");
 			response().out() <<
 					"Scores for this match submitted and saved.\n"
-					"<p><a href=\"/match/start\">Start Next Match</a>";
+					"<p><a href=\"/match/scoring.html\">Score Next Match</a>";
 		}
 	}
 	catch (std::exception const &e)
@@ -682,7 +685,7 @@ void fms::matchScoring()
 
 void fms::dispFinalScores()
 {
-	if(!instance.isMatchOngoing)
+	if(!instance.isMatchOngoing && (instance.currentCenter == "match-scores"))
 	{
 		response().out() <<
 				"<table>\n"
@@ -730,6 +733,10 @@ void fms::dispFinalScores()
 				"</tr>\n"
 				"</table>\n";
 				//Match index - 1
+	}
+	if (!instance.isMatchOngoing &&(instance.currentCenter == "leaderboard"))
+	{
+		leaderboard();
 	}
 }
 
@@ -811,5 +818,16 @@ void fms::leaderboard()
 						"</td>\n"
 						"</tr>\n";
 		}
+}
+
+void fms::audienceCenter()
+{
+	std::string setCenter;
+	setCenter = request().get("set");
+
+	if(setCenter != "")
+	{
+		instance.currentCenter = setCenter;
+	}
 }
 // vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
