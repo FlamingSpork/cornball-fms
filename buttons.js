@@ -5,6 +5,13 @@ window.datar = datar;
 });
 }
 
+var redDec = function() {
+$.get( "/score/red/dec", function( datar ) {
+document.getElementById("redscore").innerHTML = datar;
+window.datar = datar;
+});
+}
+
 var redGet = function() {
 $.get( "/score/red/get", function( datar ) {
 document.getElementById("redscore").innerHTML = datar;
@@ -16,6 +23,13 @@ var blueInc = function() {
 $.get( "/score/blue/inc", function( datab ) {
 document.getElementById("bluescore").innerHTML = datab;
 window.datab = datab;
+});
+}
+
+var blueDec = function() {
+$.get( "/score/blue/dec", function( datar ) {
+document.getElementById("bluescore").innerHTML = datar;
+window.datar = datar;
 });
 }
 
@@ -31,6 +45,12 @@ document.getElementById("yellowscore").innerHTML = datay;
 });
 }
 
+var yellowDec = function() {
+$.get( "/score/yellow/dec", function( datay ) {
+document.getElementById("yellowscore").innerHTML = datay;
+});
+}
+
 var yellowGet = function() {
 $.get( "/score/yellow/get", function( datay ) {
 document.getElementById("yellowscore").innerHTML = datay;
@@ -39,6 +59,12 @@ document.getElementById("yellowscore").innerHTML = datay;
 
 var greenInc = function() {
 $.get( "/score/green/inc", function( datag ) {
+document.getElementById("greenscore").innerHTML = datag;
+});
+}
+
+var greenDec = function() {
+$.get( "/score/green/dec", function( datag ) {
 document.getElementById("greenscore").innerHTML = datag;
 });
 }

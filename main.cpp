@@ -63,6 +63,8 @@ public:
 
         dispatcher().assign("/score/buttons.js",&fms::buttonsjs,this);
         mapper().assign("buttons.js","/score/buttons.js");
+        dispatcher().assign("/score/overlay.png",&fms::overlay,this);
+        mapper().assign("overlay.png","/score/overlay.png");
 
         dispatcher().assign("",&fms::root,this);
         mapper().assign("");
@@ -100,6 +102,8 @@ public:
         mapper().assign("control-center.html","/admin/control-center.html");
         dispatcher().assign("/admin/control-center.js",&fms::controlCenterjs,this);
         mapper().assign("control-center.js","/admin/control-center.js");
+        dispatcher().assign("/admin/save",&fms::saveEventFile,this);
+        mapper().assign("save","/admin/save");
 
         dispatcher().assign("/match/start",&fms::startMatchTimer,this);
         mapper().assign("matchstart","/match/start");
@@ -139,6 +143,7 @@ public:
 
     void buttons();
     void buttonsjs();
+    void overlay();
 
     void logopng();
     void audiencehtml();
@@ -156,6 +161,7 @@ public:
     void printHighlightedSchedule(std::string num);
     void controlCenter();
     void controlCenterjs();
+    void saveEventFile();
 
     void startMatchTimer();
     void matchScoring();
@@ -829,5 +835,37 @@ void fms::audienceCenter()
 	{
 		instance.currentCenter = setCenter;
 	}
+}
+
+void fms::saveEventFile()
+{
+	bool success;
+	success = instance.saveEventFile();
+
+	if (success)
+	{
+		response().out() <<
+				"File successfully saved.";
+	}
+}
+
+void fms::overlay()
+{
+	std::string sign;
+	sign = request().get("sign");
+	std::ifstream filein;
+
+	if (sign == "plus")
+	{
+		filein.open("plus-overlay.png");
+	}
+
+	if (sign == "minus")
+	{
+		filein.open("minus-overlay.png");
+	}
+
+	response().content_type("image/png");
+	response().out() << filein.rdbuf();
 }
 // vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4

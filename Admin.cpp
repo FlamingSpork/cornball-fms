@@ -40,9 +40,9 @@ void Admin::initFMS()
     "\n\n\n"
     "Please enter your event filename or type none.\n"
     "Filename: ";
-    std::string filename;
-    std::cin >> filename;
-    if (filename == "none")
+    //std::string filename;
+    std::cin >> eFileName;
+    if (eFileName == "none")
     {
         std::cout <<
         "If you choose to proceed without a event file, the system may behave\n"
@@ -52,7 +52,7 @@ void Admin::initFMS()
 
     std::cout<<"Parsing file, please wait...\n";
     //Parse event file
-    parseEventFile(filename);
+    parseEventFile(eFileName);
     std::cout.flush();
     //std::cout<<"Reading schedule, please wait...\n"<< std::endl;
     printf("Reading schedule, please wait....\n");
@@ -186,8 +186,10 @@ void Admin::parseEventFile(std::string filename)
 
 	//Parse the team list
 	int i=0;
+	char teamListBuffer[100];
+	strcpy(teamListBuffer, teamList);
 	teamArray = new TeamInfo [numTeams];
-	teamArray[i].TeamNumber = atoi(strtok(teamList, ","));
+	teamArray[i].TeamNumber = atoi(strtok(teamListBuffer, ","));
 	for (i=1; i < numTeams; i++)
 	{
 		teamArray[i].TeamNumber = atoi(strtok(NULL, ","));
@@ -358,4 +360,33 @@ void Admin::sortTeams()
 	}
 
 
+}
+
+bool Admin::saveEventFile()
+{
+	std::ofstream fileout(eFileName);
+
+	fileout <<
+			"eventName="
+			<< eName <<
+			"\nscheduleFile="
+			<< scheduleFile <<
+			"\nteams="
+			<< teamList <<
+			"\ncurrentMatchIndex="
+			<< matchIndex <<
+			"\nrankingsFile="
+			<< rankingsFile <<
+			"\nnumPracticeMatches="
+			<< numPractice <<
+			"\nnumQualMatches="
+			<< numQual <<
+			"\nnumElimMatches="
+			<< numElim <<
+			"\nnumFinalMatches="
+			<< numFinal <<
+			"\nnumTeams="
+			<< numTeams;
+
+	return fileout.is_open();
 }

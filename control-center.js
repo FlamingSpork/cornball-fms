@@ -59,3 +59,13 @@ function doc_keyUp(e)
 }
 // register the handler 
 document.addEventListener('keyup', doc_keyUp, false);
+
+var saveEvent = function() {
+$.ajax({
+	url:"/admin/save",
+	success: function(datar) {
+		//redScore = datar;
+	},
+	asynch:false
+});
+}

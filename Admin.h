@@ -34,6 +34,7 @@ public:
     void teamlistFetchData();
     void parseEventFile(std::string filename);
     void parseScheduleFile(char scheduleFile [50]);
+    bool saveEventFile();
 
     int getCurrentTimer();
     void startTimer();
@@ -60,6 +61,7 @@ public:
 
     char eName [20], scheduleFile [50], teamList [100], rankingsFile [50]; //Important stuff
     int matchIndex, numPractice, numQual, numElim, numFinal, numTeams;
+    std::string eFileName;
 
     time_t startTime;
     bool isTimerRunning;
