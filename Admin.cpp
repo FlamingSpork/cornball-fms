@@ -196,6 +196,7 @@ void Admin::parseEventFile(std::string filename)
 		//std::cout<<teamArray[i].TeamNumber<<"\n";
 	}
 
+
 }
 
 void Admin::parseScheduleFile(char filename [50])
@@ -278,8 +279,9 @@ void Admin::startTimer()
 	isTimerRunning = 1;
 }
 
-void Admin::postMatchCleanup()
+void Admin::postMatchCleanup(int matchId)
 {
+	//Run cleanup operations on the specified match number.
 	//This is executed after the scores are submitted.
 	int i, j;
 
@@ -287,15 +289,19 @@ void Admin::postMatchCleanup()
 	{
 		for (j=0; j < 4; j++)
 		{
-		if (teamArray[i].TeamNumber == matchArray[matchIndex - 1].TeamNumber[j])
+		if (teamArray[i].TeamNumber == matchArray[matchId].TeamNumber[j])
 		{
-			teamArray[i].sumScores += matchArray[matchIndex - 1].score[j];
+			teamArray[i].sumScores += matchArray[matchId].score[j];
 			teamArray[i].numMatches++;
+			if (teamArray[i].numMatches <= 0)
+			{
+				teamArray[i].numMatches = 1;
+			}
 			teamArray[i].average = (teamArray[i].sumScores / teamArray[i].numMatches);
 
 			if (j == 0)
 			{
-			if ((matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[3]))
+			if ((matchArray[matchId].score[0] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[3]))
 			{
 				//This code is executed if the team won the match
 				teamArray[i].matchesWon++;
@@ -304,7 +310,7 @@ void Admin::postMatchCleanup()
 
 			if (j == 1)
 			{
-			if ((matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[0]) && (matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[3]))
+			if ((matchArray[matchId].score[1] > matchArray[matchIndex - 1].score[0]) && (matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[3]))
 			{
 				//This code is executed if the team won the match
 				teamArray[i].matchesWon++;
@@ -313,7 +319,7 @@ void Admin::postMatchCleanup()
 
 			if (j == 2)
 			{
-			if ((matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[0]) && (matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[3]))
+			if ((matchArray[matchId].score[2] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[0]) && (matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[3]))
 			{
 				//This code is executed if the team won the match
 				teamArray[i].matchesWon++;
@@ -322,7 +328,7 @@ void Admin::postMatchCleanup()
 
 			if (j == 3)
 			{
-			if ((matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[0]))
+			if ((matchArray[matchId].score[3] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[0]))
 			{
 				//This code is executed if the team won the match
 				teamArray[i].matchesWon++;
@@ -389,4 +395,165 @@ bool Admin::saveEventFile()
 			<< numTeams;
 
 	return fileout.is_open();
+}
+
+void Admin::saveScoreFile()
+{
+	char filename [55];
+	int i, numMatches;
+	numMatches = numPractice + numQual + numElim + numFinal;
+
+	std::sprintf (filename, "%s.scores.csv", eName);
+
+	std::ofstream fileout(filename);
+
+	fileout << "\"Match Number\",1,2,3,4,\"Number Meaning\",\"Match Type\"\n";
+
+	for (i=0; i < numMatches; i++)
+	{
+		fileout <<
+				i+1 <<
+				","
+				<< matchArray[i].TeamNumber[0] <<
+				","
+				<< matchArray[i].TeamNumber[1] <<
+				","
+				<< matchArray[i].TeamNumber[2] <<
+				","
+				<< matchArray[i].TeamNumber[3] <<
+				",\"Team Numbers\",";
+
+		if (matchArray[i].matchtype == Admin::practice_match)
+		{
+			fileout << "\"Practice\"\n";
+		}
+		if (matchArray[i].matchtype == Admin::qual_match)
+		{
+			fileout << "\"Qualification\"\n";
+		}
+		if (matchArray[i].matchtype == Admin::elim_match)
+		{
+			fileout << "\"Elimination\"\n";
+		}
+		if (matchArray[i].matchtype == Admin::final_match)
+		{
+			fileout << "\"Final\"\n";
+		}
+
+		fileout <<
+				i+1 <<
+				","
+				<< matchArray[i].score[0] <<
+				","
+				<< matchArray[i].score[1] <<
+				","
+				<< matchArray[i].score[2] <<
+				","
+				<< matchArray[i].score[3] <<
+				",\"Scores\",";
+
+		if (matchArray[i].matchtype == Admin::practice_match)
+		{
+			fileout << "\"Practice\"\n";
+		}
+		if (matchArray[i].matchtype == Admin::qual_match)
+		{
+			fileout << "\"Qualification\"\n";
+		}
+		if (matchArray[i].matchtype == Admin::elim_match)
+		{
+			fileout << "\"Elimination\"\n";
+		}
+		if (matchArray[i].matchtype == Admin::final_match)
+		{
+			fileout << "\"Final\"\n";
+		}
+	}
+}
+
+void Admin::loadScoreFile()
+{
+	char filename [55];
+	int i, numTotalMatches, numMatches;
+	std::string fileBufferS;
+	char * charBuffer, * charBuffer1;
+	numTotalMatches = numPractice + numQual + numElim + numFinal;
+	numMatches = numTotalMatches - matchIndex;
+
+	std::sprintf (filename, "%s.scores.csv", eName);
+
+	std::ifstream filein(filename);
+
+	std::getline(filein, fileBufferS); //Take and dispose of first line
+
+	for(i=0; i < numMatches; i++)
+	{
+		std::getline(filein, fileBufferS); //Dispose of team numbers
+		std::getline(filein, fileBufferS); //Get scores
+
+		charBuffer = fileBufferS.c_str();
+		charBuffer1 = strtok(charBuffer, ",");
+		matchArray[i].score[0] = atoi(strtok(NULL,",;"));
+		matchArray[i].score[1] = atoi(strtok(NULL,",;"));
+		matchArray[i].score[2] = atoi(strtok(NULL,",;"));
+		matchArray[i].score[3] = atoi(strtok(NULL,",;"));
+
+	}
+}
+
+void Admin::removeMatchData(int matchId)
+{
+	//This clears the data of a given match from the teams' data.
+	int i, j;
+
+	for (i=0; i < numTeams; i++)
+	{
+		for (j=0; j < 4; j++)
+		{
+		if (teamArray[i].TeamNumber == matchArray[matchId].TeamNumber[j])
+		{
+			teamArray[i].sumScores -= matchArray[matchId].score[j];
+			teamArray[i].numMatches--;
+			teamArray[i].average = (teamArray[i].sumScores / teamArray[i].numMatches);
+
+			if (j == 0)
+			{
+			if ((matchArray[matchId].score[0] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[0] > matchArray[matchIndex - 1].score[3]))
+			{
+
+				teamArray[i].matchesWon--;
+			}
+			}
+
+			if (j == 1)
+			{
+			if ((matchArray[matchId].score[1] > matchArray[matchIndex - 1].score[0]) && (matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[1] > matchArray[matchIndex - 1].score[3]))
+			{
+
+				teamArray[i].matchesWon--;
+			}
+			}
+
+			if (j == 2)
+			{
+			if ((matchArray[matchId].score[2] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[0]) && (matchArray[matchIndex - 1].score[2] > matchArray[matchIndex - 1].score[3]))
+			{
+
+				teamArray[i].matchesWon--;
+			}
+			}
+
+			if (j == 3)
+			{
+			if ((matchArray[matchId].score[3] > matchArray[matchIndex - 1].score[1]) && (matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[2]) && (matchArray[matchIndex - 1].score[3] > matchArray[matchIndex - 1].score[0]))
+			{
+
+				teamArray[i].matchesWon--;
+			}
+			}
+		}
+
+
+		}
+	}
 }

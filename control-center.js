@@ -18,11 +18,18 @@ $.ajax({
 });
 }
 
-var teamNumber
+var teamNumber;
 var hSchedule = function()
 {
 	teamNumber = document.getElementById("teamNumber").value;
 	window.location.href = "/admin/schedule/" + teamNumber;
+}
+
+var matchNumber;
+var cScoring = function()
+{
+	matchNumber = parseInt(document.getElementById("matchNumber").value) - 1;
+	window.location.href = "/match/scoring.html?match-number=" + matchNumber;
 }
 
 var setCode;
@@ -69,3 +76,30 @@ $.ajax({
 	asynch:false
 });
 }
+
+var timer;
+var timerGet = function() {
+$.ajax({
+	url:"/audience/timer",
+	success: function(datat) {
+		timer = datat;
+	},
+	asynch:false
+});
+document.getElementById("timer").innerHTML = timer;
+}
+
+var matchNumber;
+var matchGet = function() {
+$.ajax({
+	url:"/audience/match-number",
+	success: function(datam) {
+		matchNumber = datam;
+	},
+	asynch:false
+});
+document.getElementById("match-number").innerHTML = matchNumber;
+}
+
+var tTimer=setInterval( function () {timerGet()}, 500);
+var mTimer=setInterval( function () {matchGet()}, 1000);

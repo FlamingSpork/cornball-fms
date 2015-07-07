@@ -35,11 +35,14 @@ public:
     void parseEventFile(std::string filename);
     void parseScheduleFile(char scheduleFile [50]);
     bool saveEventFile();
+    void saveScoreFile();
+    void loadScoreFile();
 
     int getCurrentTimer();
     void startTimer();
 
-    void postMatchCleanup();
+    void postMatchCleanup(int matchId);
+    void removeMatchData(int matchId);
     void sortTeams();
 
     enum MatchType {practice_match, qual_match, elim_match, final_match};

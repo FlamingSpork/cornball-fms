@@ -83,9 +83,22 @@ if (finalScoresHTML === "")
 
 }
 
+var matchNumber;
+var matchGet = function() {
+$.ajax({
+	url:"/audience/match-number",
+	success: function(datam) {
+		matchNumber = datam;
+	},
+	asynch:false
+});
+document.getElementById("match-number").innerHTML = matchNumber;
+}
+
 var rTimer=setInterval( function () {redGet()}, 500);
 var bTimer=setInterval( function () {blueGet()}, 500);
 var yTimer=setInterval( function () {yellowGet()}, 500);
 var gTimer=setInterval( function () {greenGet()}, 500);
 var tTimer=setInterval( function () {timerGet()}, 500);
 var sTimer=setInterval( function () {finalScoresGet()}, 1000);
+var mTimer=setInterval( function () {matchGet()}, 1000);

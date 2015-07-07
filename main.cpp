@@ -90,6 +90,9 @@ public:
         dispatcher().assign("/audience/center-display",&fms::audienceCenter,this);
         mapper().assign("center-display","/audience/center-display");
 
+        dispatcher().assign("/audience/match-number",&fms::matchNumber,this);
+        mapper().assign("match-number","/audience/match-number");
+
         dispatcher().assign("/admin/teamlist.html",&fms::teamlist,this);
         mapper().assign("teamlist.html", "/admin/teamlist.html");
         dispatcher().assign("/admin/pdfGen.js",&fms::pdfGen,this);
@@ -154,6 +157,8 @@ public:
     void currentSound();
     void leaderboard();
     void audienceCenter();
+
+    void matchNumber();
 
     void teamlist();
     void pdfGen();
@@ -619,8 +624,9 @@ void fms::stopMatchTimer()
 
 void fms::matchScoring()
 {
-	std::string red, blue, yellow, green;
-	bool display = 1;
+	std::string red, blue, yellow, green, matchNumberG, matchNumberP;
+	bool display = 1, increment=1;
+	int matchInt;
 	try
 	{
 		//It took me *far* too long to find how easy this is.
@@ -628,28 +634,44 @@ void fms::matchScoring()
 		blue = request().post("blue");
 		yellow = request().post("yellow");
 		green = request().post("green");
+		matchNumberP = request().post("match-number");
+		matchNumberG = request().get("match-number");
 
 		if (!red.empty())
 		{
+			if (matchNumberP == "")
+			{
+				matchInt = instance.matchIndex;
+			}
+			else
+			{
+				matchInt = atoi(matchNumberP.c_str());
+				increment = 0;
+				instance.removeMatchData(matchInt);
+			}
 			display = 0;
-			instance.matchArray[instance.matchIndex].score[0] = atoi(red.c_str());
-			instance.matchArray[instance.matchIndex].score[1] = atoi(blue.c_str());
-			instance.matchArray[instance.matchIndex].score[2] = atoi(yellow.c_str());
-			instance.matchArray[instance.matchIndex].score[3] = atoi(green.c_str());
+			instance.matchArray[matchInt].score[0] = atoi(red.c_str());
+			instance.matchArray[matchInt].score[1] = atoi(blue.c_str());
+			instance.matchArray[matchInt].score[2] = atoi(yellow.c_str());
+			instance.matchArray[matchInt].score[3] = atoi(green.c_str());
 
 			redCounter = 0;
 			blueCounter = 0;
 			yellowCounter = 0;
 			greenCounter = 0;
 
+			if(increment)
+			{
 			instance.matchIndex++; //Increment the match index
+			}
 			instance.isMatchOngoing = 0;
-			instance.postMatchCleanup();
+			instance.postMatchCleanup(matchInt);
 
 			//response().set_header("Location", "/score/buttons.html");
 			response().out() <<
 					"Scores for this match submitted and saved.\n"
-					"<p><a href=\"/match/scoring.html\">Score Next Match</a>";
+					"<p><a href=\"/match/scoring.html\">Score Next Match</a>\n"
+					"<p><a href=\"/admin/control-center.html\">Control Center</a>\n";
 		}
 	}
 	catch (std::exception const &e)
@@ -682,7 +704,10 @@ void fms::matchScoring()
 			"<p>Green Score\n"
 			"<p><input name=\"green\" type=\"text\" value=\""
 			<< greenCounter <<
-			"\">"
+			"\">\n"
+			"<input type=\"hidden\" name=\"match-number\" value=\""
+			<< matchNumberG <<
+			"\">\n"
 			"<p><p><input type=\"submit\" value=\"Submit Scores\">"
 			"</form>";
 	}
@@ -841,6 +866,7 @@ void fms::saveEventFile()
 {
 	bool success;
 	success = instance.saveEventFile();
+	instance.saveScoreFile();
 
 	if (success)
 	{
@@ -867,5 +893,10 @@ void fms::overlay()
 
 	response().content_type("image/png");
 	response().out() << filein.rdbuf();
+}
+
+void fms::matchNumber()
+{
+	response().out() << instance.matchIndex + 1;
 }
 // vim: tabstop=4 expandtab shiftwidth=4 softtabstop=4
