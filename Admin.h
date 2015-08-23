@@ -17,8 +17,8 @@
 #include <sstream>
 #include <time.h>
 
-#include "boost/boost/property_tree/ptree.hpp"
-#include "boost/boost/property_tree/json_parser.hpp"
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/json_parser.hpp>
 
 #ifndef ADMIN_H_
 #define ADMIN_H_
