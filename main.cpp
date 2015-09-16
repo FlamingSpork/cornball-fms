@@ -200,6 +200,7 @@ int main(int argc,char ** argv)
     }
     catch(std::exception const &e) {
         std::cerr<<e.what()<<std::endl;
+        std::cerr<<"Launching webserver portion failed."<<std::endl;
     }
     std::cout<<"Exiting now..."<< std::endl;
 }
@@ -214,7 +215,8 @@ void fms::root()
     "</html>\n";
 }
 
-
+//TODO: Move all inc and dec functions into one.
+//http://<ip>:8080/score/update?colour=<colour>&change=<+|->
 void fms::redInc()
 {
     redCounter++;

@@ -87,11 +87,15 @@ void Admin::teamlistFetchData()
     	filein.open(teamNumberC);
     	istItOpen = filein.is_open();
 
-    	std::stringstream sStream;
-    	sStream << filein.rdbuf();
+    	//std::stringstream sStream;
+    	//std::string jsonBuffer;
+    	//sStream << filein.rdbuf();
+    	cppcms::json::value pTree;
+    	//filein >> jsonBuffer;
+    	filein >> pTree;
 
-    	boost::property_tree::ptree pTree;
-    	boost::property_tree::read_json(sStream, pTree);
+    	//boost::property_tree::ptree pTree;
+    	//boost::property_tree::read_json(sStream, pTree);
 
     	teamArray[i].fullName = pTree.get<std::string>("name");
     	teamArray[i].location = pTree.get<std::string>("location");
@@ -266,10 +270,10 @@ int Admin::getCurrentTimer()
 			return 0;
 		}
 	}
-	else
-	{
-		return 0;
-	}
+
+
+	return 0; //Hopefully not...
+
 
 }
 
@@ -347,6 +351,8 @@ void Admin::sortTeams()
 {
 	int i, j, flag = 1;
 	TeamInfo temp;
+	//This bubble sort is held together with duck tape...
+	//And isn't even how I intended to sort for.
 	for (i=1; (i <= numTeams) && flag; i++)
 	{
 		flag = 0;
@@ -473,6 +479,8 @@ void Admin::saveScoreFile()
 
 void Admin::loadScoreFile()
 {
+	//TODO: Fix this!!
+	//It fails mysteriously.
 	char filename [55];
 	int i, numTotalMatches, numMatches;
 	std::string fileBufferS;
